@@ -4,17 +4,19 @@ from datetime import datetime
 
 class Task(object):
 
-    def __init__(self, minute, hour, day_of_month, month, day_of_week, action):
-        
-        self.minute = self.__chech_minute(minute)
-        self.hour = self.__chech_hour(hour)
+    def __init__(self, minute=None, hour=None, day_of_month=None, month=None,
+                 day_of_week=None, action=None, _id=None, reboot=False):
+
+        self.minute = self.__check_minute(minute)
+        self.hour = self.__check_hour(hour)
         self.day_of_month = self.__check_day_of_month(day_of_month)
         self.month = self.__check_month(month)
         self.day_of_week = self.__check_day_of_the_week(day_of_week)
         self.action = action
-        self._id = None
+        self._id = _id
+        self.reboot = reboot
 
-    def __chech_minute(self, minute):
+    def __check_minute(self, minute):
         if ',' in minute:
             minute = minute.split(',')
             separator = ','
@@ -39,8 +41,7 @@ class Task(object):
             return separator.join(minute)
         return minute
 
-    
-    def __chech_hour(self, hour):
+    def __check_hour(self, hour):
         if ',' in hour:
             hour = hour.split(',')
             separator = ','
@@ -65,17 +66,18 @@ class Task(object):
             return separator.join(hour)
         return hour
 
-    def __chech_date(self):
+    def __check_date(self):
         if self.day_of_month != '*' and self.month != '*':
 
             if ',' in self.day_of_month:
                 all_days_of_month = self.day_of_month.split(',')
             elif '-' in self.day_of_month:
                 day_of_month = self.day_of_month.split('-')
-                all_days_of_month = range(int(day_of_month[0]), int(day_of_month[-1]) + 1)
+                all_days_of_month = range(int(day_of_month[0]),
+                                          int(day_of_month[-1]) + 1)
             else:
-                all_days_of_month = self.day_of_month    
-           
+                all_days_of_month = self.day_of_month
+
             if ',' in self.month:
                 all_month = self.month.split(',')
             elif '-' in self.month:
@@ -97,8 +99,8 @@ class Task(object):
         return self.day_of_month
 
     def __check_day_of_the_week(self, day_of_week):
-        week_days = {'mon': '1', 'tue': '2', 'wed': '3', 'thu': '4', 'fri': '5', 'sat': '6',
-                     'sun': '7'}
+        week_days = {'mon': '1', 'tue': '2', 'wed': '3', 'thu': '4',
+                     'fri': '5', 'sat': '6', 'sun': '0'}
 
         if ',' in day_of_week:
             day_of_week = day_of_week.split(',')
@@ -121,15 +123,17 @@ class Task(object):
                     return day_of_week
             print 'day_of_week not in range'
             day_of_week = '*'
-            return day_of_week    
+            return day_of_week
 
         if separator:
             return separator.join(day_of_week)
         return day_of_week
 
     def output(self):
+        if self.reboot:
+            return '@reboot ' + self.action
         return str(self.minute) + ' ' + str(self.hour) + ' ' \
-               + str(self.__chech_date()) + ' ' + str(self.month) + ' ' \
+               + str(self.__check_date()) + ' ' + str(self.month) + ' ' \
                + str(self.day_of_week) + ' ' + self.action
 
     def __check_month(self, month):
@@ -153,7 +157,7 @@ class Task(object):
                 print 'month not in range'
                 month = '*'
                 return month
-        
+
         if separator:
             return separator.join(month)
         return month
@@ -179,11 +183,11 @@ class Task(object):
                 print 'day_of_month not in range'
                 day_of_month = '*'
                 return day_of_month
-        
+
         if separator:
             return separator.join(day_of_month)
         return day_of_month
 
 
-example = Task('11-24', '24', '29,31', '1-10', 'wed-fri', 'burn!')
-print example.output()
+# example = Task('11-24', '24', '29,31', '1-10', 'wed-fri', 'burn!')
+# print example.output()

@@ -1,6 +1,7 @@
 import pymongo
 
 CONNECTION_STRING = "localhost:27017"
+TEMP_FILE = '.temp_crontab'
 
 
 def get_connection():
