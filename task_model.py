@@ -7,11 +7,12 @@ class Task(object):
     def __init__(self, minute=None, hour=None, day_of_month=None, month=None,
                  day_of_week=None, action=None, _id=None, reboot=False):
 
-        self.minute = self.__check_minute(minute)
-        self.hour = self.__check_hour(hour)
-        self.day_of_month = self.__check_day_of_month(day_of_month)
-        self.month = self.__check_month(month)
-        self.day_of_week = self.__check_day_of_the_week(day_of_week)
+        if not reboot:
+            self.minute = self.__check_minute(minute)
+            self.hour = self.__check_hour(hour)
+            self.day_of_month = self.__check_day_of_month(day_of_month)
+            self.month = self.__check_month(month)
+            self.day_of_week = self.__check_day_of_the_week(day_of_week)
         self.action = action
         self._id = _id
         self.reboot = reboot
