@@ -24,6 +24,8 @@ class Task(object):
         elif '-' in minute:
             minute = minute.split('-')
             separator = '-'
+        elif minute == '*':
+            return minute
         else:
             separator = None
 
@@ -31,15 +33,23 @@ class Task(object):
             for unit in minute:
                 if int(unit) not in range(0, 60):
                     print 'minute not in range'
-                    minute = '*'
-                    return minute
+                    if separator == ',':
+                        minute[minute.index(unit)] = '59'
+                    elif separator == '-':
+                        minute[minute.index(unit)] = '59'
+                        minute = minute[:minute.index('59') + 1]
+                        minute = separator.join(minute)
+                        return minute
         else:
             if int(minute) not in range(0, 60):
                 print 'minute not in range'
-                minute = '*'
+                minute = '59'
                 return minute
+        
         if separator:
-            return separator.join(minute)
+            minute = sorted(set(minute))
+            minute = separator.join(minute)
+            return minute
         return minute
 
     def __check_hour(self, hour):
@@ -49,6 +59,8 @@ class Task(object):
         elif '-' in hour:
             hour = hour.split('-')
             separator = '-'
+        elif hour == '*':
+            return hour
         else:
             separator = None
 
@@ -56,15 +68,23 @@ class Task(object):
             for unit in hour:
                 if int(unit) not in range(0, 24):
                     print 'hour not in range'
-                    hour = '*'
-                    return hour
+                    if separator == ',':
+                        hour[hour.index(unit)] = '0'
+                    elif separator == '-':
+                        hour[hour.index(unit)] = '0'
+                        hour = hour[:hour.index('0') + 1]
+                        hour = separator.join(hour)
+                        return hour
         else:
             if int(hour) not in range(0, 24):
                 print 'hour not in range'
                 hour = '*'
                 return hour
+
         if separator:
-            return separator.join(hour)
+            hour = sorted(set(hour))
+            hour = separator.join(hour)
+            return hour
         return hour
 
     def __check_date(self):
@@ -94,9 +114,10 @@ class Task(object):
                             pass
                     except ValueError as error:
                         if str(error) == 'day is out of range for month':
-                            print 'day is out of range for month, day_of_month = *'
+                            print 'day is out of range for month'
                             self.day_of_month = '*'
                             return self.day_of_month
+
         return self.day_of_month
 
     def __check_day_of_the_week(self, day_of_week):
@@ -109,6 +130,8 @@ class Task(object):
         elif '-' in day_of_week:
             day_of_week = day_of_week.split('-')
             separator = '-'
+        elif day_of_week == '*':
+            return day_of_week
         else:
             separator = None
 
@@ -144,6 +167,8 @@ class Task(object):
         elif '-' in month:
             month = month.split('-')
             separator = '-'
+        elif month == '*':
+            return month
         else:
             separator = None
 
@@ -170,6 +195,8 @@ class Task(object):
         elif '-' in day_of_month:
             day_of_month = day_of_month.split('-')
             separator = '-'
+        elif day_of_month == '*':
+            return day_of_month
         else:
             separator = None
 
@@ -177,8 +204,13 @@ class Task(object):
             for unit in day_of_month:
                 if int(unit) not in range(1, 32):
                     print 'day_of_month not in range'
-                    day_of_month = '*'
-                    return day_of_month
+                    if separator == ',':
+                        day_of_month[day_of_month.index(unit)] = '30'
+                    elif separator == '-':
+                        day_of_month[day_of_month.index(unit)] = '30'
+                        day_of_month = day_of_month[:day_of_month.index('30')+1]
+                        day_of_month = separator.join(day_of_month)
+                        return day_of_month
         else:
             if int(day_of_month) not in range(1, 32):
                 print 'day_of_month not in range'
@@ -186,9 +218,11 @@ class Task(object):
                 return day_of_month
 
         if separator:
-            return separator.join(day_of_month)
+            day_of_month = sorted(set(day_of_month))
+            day_of_month = separator.join(day_of_month)
+            return day_of_month
         return day_of_month
 
 
-# example = Task('11-24', '24', '29,31', '1-10', 'wed-fri', 'burn!')
-# print example.output()
+example = Task('1,2,3,60,70,2,5', '1-60', '20-31', '1-10', '*', 'burn!')
+print example.output()
