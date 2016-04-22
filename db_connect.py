@@ -45,13 +45,18 @@ def db_update(cron):
 
 
 def db_add(cron):
-    data = {'minute': cron.minute,
-            'hour': cron.hour,
-            'day_of_month': cron.day_of_month,
-            'month': cron.month,
-            'day_of_week': cron.day_of_week,
-            'action': cron.action
-            }
+    if cron.reboot:
+        data = {'reboot': True,
+                'action': cron.action
+                }
+    else:
+        data = {'minute': cron.minute,
+                'hour': cron.hour,
+                'day_of_month': cron.day_of_month,
+                'month': cron.month,
+                'day_of_week': cron.day_of_week,
+                'action': cron.action
+                }
 
     try:
         collection.insert_one(data)
