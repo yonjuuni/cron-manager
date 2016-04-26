@@ -5,7 +5,6 @@ import socket
 from db_connect import get_cron_list, db_add
 from task_model import Task
 from config import TEMP_FILE
-from pprint import pprint
 
 
 def run_command(cmd):
@@ -67,13 +66,13 @@ def text_to_cron_object(text):
 
 def read_crontab(from_file=False):
     if from_file:
-        cron_list = [l.strip() for l in open(TEMP_FILE, 'rb').readlines()]
+        temp = [l.strip() for l in open(TEMP_FILE, 'rb').readlines()]
     else:
-        cron_list = run_command('crontab -l')
+        temp = run_command('crontab -l')
 
-    if cron_list:
-        cron_list = [c for c in cron_list if not c.startswith('#')]
-        res = []
+    res = []
+    if temp:
+        cron_list = [c for c in temp if not c.startswith('#')]
         for line in cron_list:
             cron = text_to_cron_object(line)
             res.append(cron)
@@ -102,7 +101,8 @@ def get_sys_info():
     host = socket.gethostname()
     user = os.getlogin()
     sys_info = os.uname()
-    return ("{} {} ({})</br>{}".format(sys_info[0], sys_info[4], sys_info[2], sys_info[3]),
+    return ("{} {} ({})</br>{}".format(sys_info[0], sys_info[4], sys_info[2],
+            sys_info[3]),
             "{}@{}".format(user, host))
 
 
@@ -110,7 +110,7 @@ def main():
     """This is an ugly temporary function until the web UI is in place.
     """
 
-    print "\nSelect option:\n1 - Read crontab\n2 - Add new cron to DB and temp" \
+    print "Select option:\n1 - Read crontab\n2 - Add new cron to DB and temp" \
           "file\n3 - Update system crontab from temp file"
     ans = raw_input('Enter your choice: ')
 

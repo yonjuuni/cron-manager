@@ -1,7 +1,7 @@
-from config import CONNECTION_STRING
 import pymongo
 from bson.objectid import ObjectId
 from task_model import Task
+from config import CONNECTION_STRING
 
 
 def get_connection(conn_string):

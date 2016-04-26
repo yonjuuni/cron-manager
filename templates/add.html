@@ -1,0 +1,22 @@
+{% macro add() %}
+<div class="modal fade" id="addCron" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="addCron">Add Cron</h4>
+      </div>
+      <div class="modal-body">
+        <form action="/" method="post">
+          <input type="text" name='cron' class="form-control" placeholder="Enter cron.." aria-describedby="cron" required>
+        <p class="text-muted"><i>Hint: minute hour day_of_month month day_of_week command</i></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" name='add'>Save changes</button>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endmacro %}
