@@ -26,6 +26,14 @@ class Task(object):
             separator = '-'
         elif minute == '*':
             return minute
+        elif  '*/' in minute:
+            test = minute.split('/')
+            if int(test[1]) not in range(2, 31):
+                print "Wrong using of '/' for minute"
+                minute = '*'
+                return minute
+            else:
+                return minute
         else:
             separator = None
 
@@ -61,6 +69,14 @@ class Task(object):
             separator = '-'
         elif hour == '*':
             return hour
+        elif  '*/' in hour:
+            test = hour.split('/')
+            if int(test[1]) not in range(2, 13):
+                print "Wrong using of '/' for hour"
+                hour = '*'
+                return hour
+            else:
+                return hour
         else:
             separator = None
 
@@ -88,16 +104,20 @@ class Task(object):
         return hour
 
     def __check_date(self):
+        max_value = []
         if self.day_of_month != '*' and self.month != '*':
 
             if ',' in self.day_of_month:
                 all_days_of_month = self.day_of_month.split(',')
+                separator = ','
             elif '-' in self.day_of_month:
                 day_of_month = self.day_of_month.split('-')
                 all_days_of_month = range(int(day_of_month[0]),
                                           int(day_of_month[-1]) + 1)
+                separator = '-'
             else:
-                all_days_of_month = self.day_of_month
+                all_days_of_month = [self.day_of_month]
+                separator = '!'
 
             if ',' in self.month:
                 all_month = self.month.split(',')
@@ -105,7 +125,7 @@ class Task(object):
                 month = self.month.split('-')
                 all_month = range(int(month[0]), int(month[-1]) + 1)
             else:
-                all_month = self.month
+                all_month = [self.month]
 
             for month in all_month:
                 for day in all_days_of_month:
@@ -115,8 +135,33 @@ class Task(object):
                     except ValueError as error:
                         if str(error) == 'day is out of range for month':
                             print 'day is out of range for month'
-                            self.day_of_month = '*'
-                            return self.day_of_month
+                            if 2 in all_month or '2' in all_month:
+                                max_value.append(28)
+                            else:
+                                max_value.append(30)
+
+            if max_value:
+                max_value = str(min(max_value))
+            else:
+                max_value = '31'
+
+            new_day_of_month = []
+            if separator == ',':
+                for day in all_days_of_month:
+                    if day <= max_value:
+                        new_day_of_month.append(day)
+                return separator.join(new_day_of_month)
+            elif separator == '-':
+                if day_of_month[0] == max_value:
+                    day_of_month = [max_value]
+                else:
+                    day_of_month[1] = max_value
+                return separator.join(day_of_month)
+            else:
+                if int(all_days_of_month[0]) > int(max_value):
+                    return max_value
+                else:
+                    return all_days_of_month[0]
 
         return self.day_of_month
 
@@ -132,6 +177,14 @@ class Task(object):
             separator = '-'
         elif day_of_week == '*':
             return day_of_week
+        elif  '*/' in day_of_week:
+            test = day_of_week.split('/')
+            if int(test[1]) not in range(2, 4):
+                print "Wrong using of '/' fo day_of_week"
+                day_of_week = '*'
+                return day_of_week
+            else:
+                return day_of_week
         else:
             separator = None
 
@@ -169,6 +222,14 @@ class Task(object):
             separator = '-'
         elif month == '*':
             return month
+        elif  '*/' in month:
+            test = month.split('/')
+            if int(test[1]) not in range(2, 7):
+                print "Wrong using of '/' for month"
+                month = '*'
+                return month
+            else:
+                return month
         else:
             separator = None
 
@@ -197,6 +258,14 @@ class Task(object):
             separator = '-'
         elif day_of_month == '*':
             return day_of_month
+        elif  '*/' in day_of_month:
+            test = day_of_month.split('/')
+            if int(test[1]) not in range(2, 16):
+                print "Wrong using of '/' for day_of_month"
+                day_of_month = '*'
+                return day_of_month
+            else:
+                return day_of_month
         else:
             separator = None
 
@@ -224,5 +293,5 @@ class Task(object):
         return day_of_month
 
 
-# example = Task('1,2,3,60,70,2,5', '1-60', '20-31', '1-10', '*', 'burn!')
+# example = Task('*/31', '*/31', '28-31', '2-5', '*/10', 'burn!')
 # print example.output()
