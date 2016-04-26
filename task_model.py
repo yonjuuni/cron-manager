@@ -224,5 +224,5 @@ class Task(object):
         return day_of_month
 
 
-example = Task('1,2,3,60,70,2,5', '1-60', '20-31', '1-10', '*', 'burn!')
-print example.output()
+# example = Task('1,2,3,60,70,2,5', '1-60', '20-31', '1-10', '*', 'burn!')
+# print example.output()

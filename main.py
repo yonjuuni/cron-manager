@@ -1,5 +1,7 @@
 import subprocess
 import sys
+import os
+import socket
 from db_connect import get_cron_list, db_add
 from task_model import Task
 from config import TEMP_FILE
@@ -58,7 +60,7 @@ def text_to_cron_object(text):
                      action=' '.join(cron[5:]))
         except Exception as e:
             print "{} is not a valid cron entry.\nDetails: {}".format(text, e)
-            return None
+            return e
 
     return t
 
@@ -69,9 +71,8 @@ def read_crontab(from_file=False):
     else:
         cron_list = run_command('crontab -l')
 
-    cron_list = [c for c in cron_list if not c.startswith('#')]
-
     if cron_list:
+        cron_list = [c for c in cron_list if not c.startswith('#')]
         res = []
         for line in cron_list:
             cron = text_to_cron_object(line)
@@ -95,6 +96,14 @@ def write_crontab(file=TEMP_FILE):
         print 'An error occurred while updating crontab.\nDetails: ', e
     else:
         print 'Crontab has been successfully updated.'
+
+
+def get_sys_info():
+    host = socket.gethostname()
+    user = os.getlogin()
+    sys_info = os.uname()
+    return ("{} {} ({})</br>{}".format(sys_info[0], sys_info[4], sys_info[2], sys_info[3]),
+            "{}@{}".format(user, host))
 
 
 def main():

@@ -1,6 +1,19 @@
-from config import collection
+from config import CONNECTION_STRING
+import pymongo
 from bson.objectid import ObjectId
 from task_model import Task
+
+
+def get_connection(conn_string):
+    return pymongo.MongoClient(conn_string)
+
+
+def get_db(conn, db_name):
+    return conn[db_name]
+
+
+def get_collection(db, collection_name):
+    return db[collection_name]
 
 
 def get_cron_list():
@@ -64,5 +77,9 @@ def db_add(cron):
         print 'Unable to create DB entry.\nError:', e
 
 
-def db_delete(cron):
-    collection.remove({'_id': cron._id})
+def db_delete(_id):
+    collection.remove({'_id': ObjectId(_id)})
+
+
+db = get_db(get_connection(CONNECTION_STRING), 'test')
+collection = get_collection(db, 'cron-manager')
